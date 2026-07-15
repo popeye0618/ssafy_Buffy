@@ -1,0 +1,90 @@
+# Dependencies and package-manager caches
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/
+.yarn-cache/
+*.tgz
+
+# Build output and tool caches
+dist/
+dist-ssr/
+.vite/
+.cache/
+coverage/
+*.tsbuildinfo
+
+# Test output
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.local
+secrets/
+.secret/
+credentials.json
+service-account*.json
+*service-account*.json
+
+# Private keys, certificates, and keystores
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.jks
+*.keystore
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+
+# Local databases and user-generated data
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+uploads/
+
+# Logs and runtime files
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.pid
+*.pid.lock
+
+# Deployment-provider local state
+.vercel/
+.netlify/
+.wrangler/
+
+# Editor, OS, and local assistant settings
+.idea/
+.vscode/
+.claude/
+.codex/
+.cursor/
+*.iml
+*.code-workspace
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~

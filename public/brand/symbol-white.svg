@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 74" width="80" height="74">
+  <defs>
+    <clipPath id="bub"><rect x="6" y="6" width="68" height="48" rx="12"/></clipPath>
+  </defs>
+  <path d="M16 0 H64 Q80 0 80 16 V44 Q80 60 64 60 H50 L40 74 L30 60 H16 Q0 60 0 44 V16 Q0 0 16 0 Z" fill="#FFFFFF"/>
+  <g clip-path="url(#bub)">
+    <circle cx="57" cy="21" r="7.5" fill="#F7761F"/>
+    <path d="M6 34 Q16 27 26 34 T46 34 T66 34 T86 34 V54 H6 Z" fill="#14406F"/>
+    <path d="M6 43 Q16 36 26 43 T46 43 T66 43 T86 43 V54 H6 Z" fill="#3E7CC2"/>
+  </g>
+</svg>

@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540" role="img" aria-label="부산 여행 마스코트 갈매기 캐릭터">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#EAF7FF"/>
+      <stop offset="55%" stop-color="#CDEAFB"/>
+      <stop offset="100%" stop-color="#9ED6F2"/>
+    </linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4C8AD0"/>
+      <stop offset="100%" stop-color="#1C4C82"/>
+    </linearGradient>
+    <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFDFB0" stop-opacity=".95"/>
+      <stop offset="100%" stop-color="#FFDFB0" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="headClip"><circle cx="480" cy="80" r="140"/></clipPath>
+  </defs>
+
+  <!-- 하늘 -->
+  <rect width="960" height="540" fill="url(#sky)"/>
+  <circle cx="150" cy="110" r="140" fill="url(#sunGlow)"/>
+  <circle cx="150" cy="110" r="52" fill="#FFB65C"/>
+
+  <g opacity=".85" fill="#FFFFFF">
+    <ellipse cx="740" cy="90" rx="55" ry="19"/>
+    <ellipse cx="790" cy="80" rx="40" ry="15"/>
+    <ellipse cx="700" cy="78" rx="34" ry="13"/>
+    <ellipse cx="80" cy="230" rx="40" ry="14"/>
+    <ellipse cx="120" cy="222" rx="28" ry="11"/>
+  </g>
+
+  <!-- 바다 -->
+  <path d="M0 400 C 140 375, 280 415, 440 396 C 600 377, 740 415, 900 392 C 930 388, 950 390, 960 392 L960 540 L0 540 Z" fill="url(#sea)"/>
+  <path d="M0 424 C 150 404, 300 436, 460 420 C 620 404, 760 434, 960 416 L960 540 L0 540 Z" fill="#5C9AD8" opacity=".55"/>
+  <g opacity=".75" stroke="#F2FBFF" stroke-width="4" stroke-linecap="round" fill="none">
+    <path d="M70 452 q13 -9 26 0"/>
+    <path d="M860 446 q13 -9 26 0"/>
+    <path d="M180 470 q13 -9 26 0"/>
+    <path d="M760 476 q13 -9 26 0"/>
+  </g>
+
+  <!-- 마스코트 캐릭터 전체 (화면 안쪽으로 여유 있게 배치, 잘리지 않도록 축소+중앙 정렬) -->
+  <g transform="translate(77 96) scale(0.769)">
+    <ellipse cx="480" cy="486" rx="168" ry="20" fill="#0B2F52" opacity=".16"/>
+
+    <g>
+      <g fill="#FF8A3D">
+        <ellipse cx="410" cy="472" rx="46" ry="20"/>
+        <ellipse cx="550" cy="472" rx="46" ry="20"/>
+      </g>
+      <g fill="#F4700E">
+        <circle cx="382" cy="478" r="9"/>
+        <circle cx="410" cy="486" r="9"/>
+        <circle cx="438" cy="478" r="9"/>
+        <circle cx="522" cy="478" r="9"/>
+        <circle cx="550" cy="486" r="9"/>
+        <circle cx="578" cy="478" r="9"/>
+      </g>
+
+      <path d="M328 250 C 268 268, 258 350, 320 384 C 348 398, 372 372, 366 330 C 362 300, 352 268, 328 250 Z" fill="#3E7CC2"/>
+      <path d="M336 270 C 306 288, 300 340, 336 366" fill="none" stroke="#2C5F9E" stroke-width="5" stroke-linecap="round" opacity=".5"/>
+
+      <ellipse cx="480" cy="330" rx="172" ry="182" fill="#FDFEFF"/>
+      <path d="M340 380 C 350 440, 420 470, 480 466 C 420 480, 340 456, 322 400 C 318 390, 328 384, 340 380 Z" fill="#DCEEFC"/>
+
+      <g transform="rotate(-18 634 230)">
+        <path d="M600 200 C 660 172, 706 200, 696 256 C 690 292, 648 296, 620 268 C 600 246, 592 220, 600 200 Z" fill="#4E8AD1"/>
+        <path d="M614 210 C 648 196, 676 214, 674 246" fill="none" stroke="#2C5F9E" stroke-width="5" stroke-linecap="round" opacity=".5"/>
+      </g>
+      <g fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity=".8">
+        <path d="M700 150 q14 6 8 20"/>
+        <path d="M726 172 q16 2 14 18"/>
+        <path d="M718 202 q16 -2 18 12"/>
+      </g>
+
+      <path d="M400 240 C 440 268, 520 268, 560 240 C 556 262, 520 282, 480 282 C 440 282, 404 262, 400 240 Z" fill="#FF8A3D"/>
+      <path d="M552 250 L 586 246 L 566 296 Z" fill="#FF8A3D"/>
+
+      <circle cx="480" cy="80" r="140" fill="#FDFEFF"/>
+      <g clip-path="url(#headClip)">
+        <rect x="340" y="-60" width="280" height="180" fill="#3E7CC2"/>
+        <path d="M340 118 C 420 138, 540 138, 620 118 L620 96 C 540 118, 420 118, 340 96 Z" fill="#2C5F9E" opacity=".6"/>
+      </g>
+
+      <ellipse cx="404" cy="120" rx="17" ry="11" fill="#FFB199" opacity=".65"/>
+      <ellipse cx="556" cy="120" rx="17" ry="11" fill="#FFB199" opacity=".65"/>
+
+      <circle cx="442" cy="92" r="23" fill="#22314A"/>
+      <circle cx="518" cy="92" r="23" fill="#22314A"/>
+      <circle cx="450" cy="83" r="7.5" fill="#FFFFFF"/>
+      <circle cx="526" cy="83" r="7.5" fill="#FFFFFF"/>
+
+      <path d="M458 132 Q480 156 502 132 Q480 146 458 132 Z" fill="#FF8A3D"/>
+      <line x1="463" y1="133" x2="497" y2="133" stroke="#E8650F" stroke-width="2.5" opacity=".7"/>
+    </g>
+
+    <g transform="translate(700 160) rotate(6)">
+      <line x1="0" y1="0" x2="0" y2="120" stroke="#0B2F52" stroke-width="6" stroke-linecap="round"/>
+      <path d="M0 -4 L70 16 L0 36 Z" fill="#FF8A3D"/>
+      <circle cx="24" cy="16" r="7" fill="#FDFEFF"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,1 @@
+<template><div class="page"><div class="empty mx-auto mt-20 max-w-xl"><div class="text-6xl font-extrabold text-[var(--primary-hover)]">404</div><h1 class="mt-4 text-2xl font-bold">페이지를 찾을 수 없어요</h1><p class="mt-2 text-[var(--sub)]">주소가 올바른지 확인하거나 홈으로 돌아가 주세요.</p><RouterLink class="btn btn-primary mt-6" to="/">홈으로 가기</RouterLink></div></div></template>
