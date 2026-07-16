@@ -6,6 +6,15 @@ function formatCompactDate(value: string) {
 }
 
 export function parseStructuredInfo(text: string): InfoPart[] {
+  const attractionSentence = text.trim().match(/^(.+?)\s+is\s+a\s+Busan\s+attraction\s+located\s+at\s+(.+?)(?:\.\s*(.*))?$/i)
+  if (attractionSentence) {
+    const [, , address, remainder] = attractionSentence
+    return [
+      { label: 'Type', value: 'Busan attraction' },
+      { label: 'Address', value: address.trim() },
+      ...(remainder ? [{ label: 'Details', value: remainder.trim() }] : []),
+    ]
+  }
   return text
     .replace(/\s*※\s*/g, ' | ※ ')
     .split('|')

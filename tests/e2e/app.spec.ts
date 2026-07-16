@@ -99,11 +99,35 @@ test('shows the new representative hero image', async ({ page }) => {
 
 test('switches the interface and localized content to English', async ({ page }) => {
   await page.goto('/attractions')
-  await page.locator('button[aria-label="영어로 전환"]:visible').click()
+  await page.locator('button[aria-label="언어 전환"]:visible').click()
   await expect(page.getByRole('heading', { name: 'Busan attractions' })).toBeVisible()
   await expect(page.getByText('Haeundae Beach')).toBeVisible()
   await expect(page.getByPlaceholder('Search by name on this page')).toBeVisible()
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+})
+
+test('switches post creation and comment controls to English', async ({ page }) => {
+  await page.goto('/boards/1/posts/new')
+  await page.locator('button[aria-label="언어 전환"]:visible').click()
+  await expect(page.getByRole('heading', { name: 'New post' })).toBeVisible()
+  await expect(page.getByLabel('Title')).toBeVisible()
+  await expect(page.getByLabel('Content')).toBeVisible()
+  await expect(page.getByText('프론트엔드에는 저장되지 않습니다')).toHaveCount(0)
+
+  await page.goto('/boards/1/posts/1')
+  await expect(page.getByRole('button', { name: /Edit/ })).toBeVisible()
+  await expect(page.getByRole('button', { name: /Delete/ }).first()).toBeVisible()
+  await expect(page.getByText('Views 12')).toBeVisible()
+  await expect(page.getByRole('button', { name: /Likes 2/ })).toBeVisible()
+  await expect(page.getByPlaceholder('Write a comment')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Post comment' })).toBeVisible()
+})
+
+test('shows the empty post list message in English', async ({ page }) => {
+  await page.route('**/api/v1/boards/1/posts*', route => route.fulfill({ json: { items: [], total: 0, page: 1, size: 10 } }))
+  await page.goto('/boards/1/posts')
+  await page.locator('button[aria-label="언어 전환"]:visible').click()
+  await expect(page.getByRole('heading', { name: 'No posts yet' })).toBeVisible()
 })
 
 test('sends chatbot session headers and renders the answer', async ({ page }) => {

@@ -13,14 +13,14 @@ const tools = computed(() => [
   { label: app.t('맨 위로', 'Back to top'), action: toTop, icon: ArrowUp },
   { label: app.t('글자 작게', 'Decrease text size'), action: () => font(-.05), icon: AArrowDown },
   { label: app.t('글자 크게', 'Increase text size'), action: () => font(.05), icon: AArrowUp },
-  { label: app.t('영어로 전환', 'Switch to Korean'), action: toggleLang, icon: Languages, language: true },
+  { label: app.t('언어 전환', 'Switch language'), action: toggleLang, icon: Languages },
   { label: app.t('화면 테마', 'Change theme'), action: toggleTheme, icon: Moon },
 ])
 </script>
 
 <template>
   <div class="mobile-utilities mobile-only fixed top-4 z-50 flex overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-[var(--shadow)]">
-    <button class="utility-button gap-1 px-2" @click="toggleLang" :aria-label="app.lang === 'ko' ? '영어로 전환' : 'Switch to Korean'"><Languages :size="18" /><span class="text-xs font-extrabold">{{app.lang === 'ko' ? 'EN' : 'KO'}}</span></button>
+    <button class="utility-button" @click="toggleLang" :aria-label="app.t('언어 전환','Switch language')"><Languages :size="19" /></button>
     <button class="utility-button" @click="toggleTheme" :aria-label="app.t('화면 테마 전환','Change theme')"><Sun v-if="app.theme === 'dark'" :size="19" /><Moon v-else :size="19" /></button>
     <button class="utility-button" @click="menuOpen = !menuOpen" :aria-expanded="menuOpen" aria-controls="mobile-menu"><X v-if="menuOpen" /><Menu v-else /></button>
   </div>
@@ -29,7 +29,6 @@ const tools = computed(() => [
     <button v-for="tool in tools" :key="tool.label" class="remote-button group" @click="tool.action" :aria-label="tool.label">
       <span class="remote-tooltip" role="tooltip">{{ tool.label }}</span>
       <component :is="tool.icon" :size="18" />
-      <span v-if="tool.language" class="text-[10px] font-extrabold">{{app.lang === 'ko' ? 'EN' : 'KO'}}</span>
     </button>
   </aside>
 

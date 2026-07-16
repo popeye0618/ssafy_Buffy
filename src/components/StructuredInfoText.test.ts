@@ -12,4 +12,11 @@ describe('structured tourism information', () => {
       { value: '자세한 시간은 공식 홈페이지 참조', note: true },
     ])
   })
+
+  it('structures an English attraction sentence', () => {
+    expect(parseStructuredInfo('25의용단 is a Busan attraction located at 부산광역시 수영구 연수로379번길 42 (수영동).')).toEqual([
+      { label: 'Type', value: 'Busan attraction' },
+      { label: 'Address', value: '부산광역시 수영구 연수로379번길 42 (수영동)' },
+    ])
+  })
 })
