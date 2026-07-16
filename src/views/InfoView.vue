@@ -31,8 +31,34 @@ const app = useAppStore()
 
     <article v-else class="max-w-3xl">
       <h1 class="text-4xl font-extrabold">{{app.t('데이터 출처 및 라이선스', 'Data sources & licenses')}}</h1>
-      <div class="card mt-8 p-6"><h2 class="text-xl font-bold">{{app.t('관광·축제 데이터', 'Tourism and festival data')}}</h2><p class="mt-3 leading-7 text-[var(--sub)]">{{app.t('부산광역시 공공데이터포털과 부산관광공사의 공개 정보를 참고해 재구성한 mock 데이터입니다. 현재 화면의 행사 일정과 운영 정보는 실제 방문 전 공식 채널에서 다시 확인해야 합니다.', 'This mock data was reconstructed from public information provided by Busan Metropolitan City and the Busan Tourism Organization. Confirm event schedules and operating information through official channels before visiting.')}}</p></div>
-      <div class="card mt-4 p-6"><h2 class="text-xl font-bold">{{app.t('프로토타입 안내', 'Prototype notice')}}</h2><p class="mt-3 leading-7 text-[var(--sub)]">{{app.t('현재 버전은 프론트엔드 시연용이며 실제 백엔드, 공공 API, 파일 저장소와 연결되어 있지 않습니다.', 'This version is a front-end demonstration and is not connected to a production backend, public API, or file storage.')}}</p></div>
+      <p class="mt-4 leading-7 text-[var(--sub)]">{{app.t('Busan LocalHub는 현재 운영 백엔드와 연결되어 있으며, 아래 기준으로 관광 정보와 커뮤니티 콘텐츠를 제공합니다.', 'Busan LocalHub is connected to its production backend and provides tourism and community content under the following terms.')}}</p>
+
+      <div class="card mt-8 p-6">
+        <h2 class="text-xl font-bold">{{app.t('관광지·축제 정보', 'Attraction and festival information')}}</h2>
+        <p class="mt-3 leading-7 text-[var(--sub)]">{{app.t('관광지와 축제 정보는 Busan LocalHub 백엔드 API를 통해 제공됩니다. 일부 이미지와 관광 원문은 한국관광공사 VisitKorea 계열 콘텐츠 서버 등 공공 관광정보 원천에서 제공되며, 원문·사진의 권리는 각 원 제공기관과 저작권자에게 있습니다.', 'Attraction and festival information is delivered through the Busan LocalHub backend API. Some images and source content are provided by public tourism sources, including Korea Tourism Organization VisitKorea content servers. Rights to source text and images remain with their original providers and copyright holders.')}}</p>
+        <div class="mt-4 flex flex-wrap gap-3 text-sm"><a class="link" href="https://api.visitkorea.or.kr/" target="_blank" rel="noopener noreferrer">TourAPI</a><a class="link" href="https://www.data.go.kr/" target="_blank" rel="noopener noreferrer">{{app.t('공공데이터포털', 'Public Data Portal')}}</a><a class="link" href="https://www.visitbusan.net/" target="_blank" rel="noopener noreferrer">Visit Busan</a></div>
+      </div>
+
+      <div class="card mt-4 p-6">
+        <h2 class="text-xl font-bold">{{app.t('일정과 운영 정보', 'Schedules and operating information')}}</h2>
+        <p class="mt-3 leading-7 text-[var(--sub)]">{{app.t('행사 일정, 장소, 이용시간과 운영 상태는 원 제공기관의 변경 사항이 즉시 반영되지 않을 수 있습니다. 실제 방문 전 주최기관이나 시설의 공식 채널에서 최신 정보를 확인해 주세요.', 'Event schedules, venues, opening hours, and operating status might not immediately reflect changes from the original provider. Confirm the latest details through the organizer or venue before visiting.')}}</p>
+      </div>
+
+      <div class="card mt-4 p-6">
+        <h2 class="text-xl font-bold">{{app.t('커뮤니티 콘텐츠', 'Community content')}}</h2>
+        <p class="mt-3 leading-7 text-[var(--sub)]">{{app.t('게시글과 댓글은 이용자가 직접 작성한 콘텐츠입니다. 작성 내용의 정확성과 권리는 해당 작성자에게 있으며, 서비스의 공식 관광 안내로 간주되지 않습니다.', 'Posts and comments are user-generated content. Their accuracy and associated rights remain with their authors, and they should not be treated as official tourism guidance.')}}</p>
+      </div>
+
+      <div class="card mt-4 p-6">
+        <h2 class="text-xl font-bold">{{app.t('영문 번역과 AI 안내', 'English translations and AI guidance')}}</h2>
+        <p class="mt-3 leading-7 text-[var(--sub)]">{{app.t('영문 관광 정보와 게시글 번역, 챗봇 답변은 자동 처리된 결과를 포함할 수 있습니다. 고유명사, 주소, 일정에는 번역 오류가 있을 수 있으므로 중요한 정보는 한국어 원문과 공식 출처를 함께 확인해 주세요.', 'English tourism information, post translations, and chatbot responses may include automatically processed content. Proper names, addresses, and schedules can contain translation errors, so verify important details against the Korean source and official channels.')}}</p>
+      </div>
+
+      <div class="card mt-4 p-6">
+        <h2 class="text-xl font-bold">{{app.t('API 및 서비스 상태', 'API and service status')}}</h2>
+        <p class="mt-3 leading-7 text-[var(--sub)]">{{app.t('현재 서비스는 실제 백엔드 API, 이미지 저장소, 실시간 WebSocket 연결을 사용합니다. API 명세는 아래 문서에서 확인할 수 있습니다.', 'The service currently uses a production backend API, image storage, and a real-time WebSocket connection. The API specification is available below.')}}</p>
+        <a class="link mt-4 inline-flex" href="https://ssafy-first-team.onrender.com/docs" target="_blank" rel="noopener noreferrer">Busan LocalHub API Docs</a>
+      </div>
     </article>
   </div>
 </template>
