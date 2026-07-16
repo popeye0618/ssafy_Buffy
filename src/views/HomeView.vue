@@ -20,9 +20,9 @@ onMounted(()=>{
 </script>
 
 <template><div class="page fade">
-  <section class="pt-2 md:pt-3"><div class="grid items-center gap-9 md:grid-cols-[1.08fr_.92fr]"><div>
+  <section class="pt-2 md:pt-3"><div class="grid items-center gap-9 md:grid-cols-[1.08fr_.92fr]"><div class="min-w-0">
     <h1 class="whitespace-pre-line text-[clamp(2.15rem,5vw,3.55rem)] font-extrabold leading-[1.12] tracking-[-.04em]">{{app.lang==='ko'?'부산에서 무엇을\n즐기고 싶나요?':'What would you like\nto enjoy in Busan?'}}</h1>
-    <p class="mt-5 whitespace-nowrap text-[clamp(.7rem,1.55vw,1.125rem)] leading-8 text-[var(--sub)]">{{app.lang==='ko'?'관광지와 축제를 먼저 살펴보고, 지역별 익명 커뮤니티에서 현지 경험을 나눠보세요.':'Explore attractions and festivals, then share local tips in anonymous community boards.'}}</p>
+    <p class="mt-5 max-w-2xl text-[clamp(.82rem,1.55vw,1.125rem)] leading-7 text-[var(--sub)] md:leading-8">{{app.lang==='ko'?'관광지와 축제를 먼저 살펴보고, 지역별 익명 커뮤니티에서 현지 경험을 나눠보세요.':'Explore attractions and festivals, then share local tips in anonymous community boards.'}}</p>
     <form class="mt-7 flex max-w-xl items-center gap-2 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-2 pl-4 shadow-[var(--shadow-md)]" @submit.prevent="goSearch"><Search :size="20"/><input v-model="heroQuery" class="min-w-0 flex-1 bg-transparent p-2 outline-none" :placeholder="app.t('장소, 축제, 게시글 검색','Search places, festivals, and posts')"><button class="btn btn-primary" :disabled="!heroQuery.trim()">{{app.t('검색','Search')}}</button></form>
     <div class="mt-6 flex flex-wrap gap-2"><RouterLink class="btn btn-soft" to="/festivals"><CalendarDays :size="18"/>{{app.t('진행 중인 축제','Current festivals')}}</RouterLink><RouterLink class="btn" to="/attractions"><MapPin :size="18"/>{{app.t('관광지','Attractions')}}</RouterLink><RouterLink class="btn" to="/boards"><MessagesSquare :size="18"/>{{app.t('커뮤니티','Community')}}</RouterLink><button v-if="pwa.canInstall.value" class="btn desktop-only" @click="pwa.install"><Download :size="18"/>{{app.t('앱으로 설치','Install app')}}</button></div>
   </div><div class="h-[330px] overflow-hidden rounded-[20px] border border-[var(--border)] bg-[var(--surface)]"><img src="/brand/hero-busan-v2.png" :alt="app.lang==='ko'?'갈매기 마스코트와 함께 부산 여행을 시작해 보세요':'Start your Busan trip with the seagull mascot'" class="h-full w-full object-cover"></div></div></section>

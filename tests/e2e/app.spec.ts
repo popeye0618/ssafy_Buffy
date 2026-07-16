@@ -104,6 +104,8 @@ test('switches popular posts to English', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Popular posts' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Haeundae Local Tips' })).toBeVisible()
   await expect(page.getByRole('heading', { name: '인기 게시글' })).toHaveCount(0)
+  const widths = await page.evaluate(() => ({ viewport: document.documentElement.clientWidth, content: document.documentElement.scrollWidth }))
+  expect(widths.content).toBeLessThanOrEqual(widths.viewport)
 })
 
 test('shows the new representative hero image', async ({ page }) => {

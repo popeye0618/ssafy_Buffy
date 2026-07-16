@@ -10,9 +10,9 @@ const app = useAppStore()
     <RouterLink class="btn mb-6" to="/">← {{app.t('홈으로', 'Home')}}</RouterLink>
 
     <article v-if="section === 'about'" class="max-w-3xl">
-      <img src="/brand/logo-horizontal.svg" alt="Busan LocalHub" class="h-16 max-w-full">
-      <h1 class="mt-8 text-4xl font-extrabold">{{app.t('서비스 소개', 'About Busan LocalHub')}}</h1>
-      <p class="mt-5 text-lg leading-9 text-[var(--sub)]">{{app.t('Busan LocalHub는 부산을 방문하는 국내외 관광객이 관광지와 축제를 먼저 탐색하고, 지역별 익명 커뮤니티에서 현지 경험을 나눌 수 있도록 연결하는 서비스입니다.', 'Busan LocalHub helps visitors discover attractions and festivals, then share firsthand experiences through anonymous local communities.')}}</p>
+      <img src="/brand/logo-horizontal.svg" alt="buffy" class="h-16 max-w-full">
+      <h1 class="mt-8 text-4xl font-extrabold">{{app.t('서비스 소개', 'About buffy')}}</h1>
+      <p class="mt-5 text-lg leading-9 text-[var(--sub)]">{{app.t('buffy는 부산을 방문하는 국내외 관광객이 관광지와 축제를 먼저 탐색하고, 지역별 익명 커뮤니티에서 현지 경험을 나눌 수 있도록 연결하는 서비스입니다.', 'buffy helps visitors discover attractions and festivals, then share firsthand experiences through anonymous local communities.')}}</p>
       <div class="mt-8 grid gap-4 md:grid-cols-3">
         <div class="card p-5"><strong>{{app.t('관광 정보', 'Travel information')}}</strong><p class="mt-2 text-sm leading-6 text-[var(--sub)]">{{app.t('관광지와 축제 정보를 한눈에 탐색합니다.', 'Explore attractions and festivals at a glance.')}}</p></div>
         <div class="card p-5"><strong>{{app.t('익명 커뮤니티', 'Anonymous community')}}</strong><p class="mt-2 text-sm leading-6 text-[var(--sub)]">{{app.t('로그인 없이 여행 팁과 질문을 공유합니다.', 'Share travel tips and questions without signing in.')}}</p></div>
@@ -31,11 +31,11 @@ const app = useAppStore()
 
     <article v-else class="max-w-3xl">
       <h1 class="text-4xl font-extrabold">{{app.t('데이터 출처 및 라이선스', 'Data sources & licenses')}}</h1>
-      <p class="mt-4 leading-7 text-[var(--sub)]">{{app.t('Busan LocalHub는 현재 운영 백엔드와 연결되어 있으며, 아래 기준으로 관광 정보와 커뮤니티 콘텐츠를 제공합니다.', 'Busan LocalHub is connected to its production backend and provides tourism and community content under the following terms.')}}</p>
+      <p class="mt-4 leading-7 text-[var(--sub)]">{{app.t('buffy는 현재 운영 백엔드와 연결되어 있으며, 아래 기준으로 관광 정보와 커뮤니티 콘텐츠를 제공합니다.', 'buffy is connected to its production backend and provides tourism and community content under the following terms.')}}</p>
 
       <div class="card mt-8 p-6">
         <h2 class="text-xl font-bold">{{app.t('관광지·축제 정보', 'Attraction and festival information')}}</h2>
-        <p class="mt-3 leading-7 text-[var(--sub)]">{{app.t('관광지와 축제 정보는 Busan LocalHub 백엔드 API를 통해 제공됩니다. 일부 이미지와 관광 원문은 한국관광공사 VisitKorea 계열 콘텐츠 서버 등 공공 관광정보 원천에서 제공되며, 원문·사진의 권리는 각 원 제공기관과 저작권자에게 있습니다.', 'Attraction and festival information is delivered through the Busan LocalHub backend API. Some images and source content are provided by public tourism sources, including Korea Tourism Organization VisitKorea content servers. Rights to source text and images remain with their original providers and copyright holders.')}}</p>
+        <p class="mt-3 leading-7 text-[var(--sub)]">{{app.t('관광지와 축제 정보는 buffy 백엔드 API를 통해 제공됩니다. 일부 이미지와 관광 원문은 한국관광공사 VisitKorea 계열 콘텐츠 서버 등 공공 관광정보 원천에서 제공되며, 원문·사진의 권리는 각 원 제공기관과 저작권자에게 있습니다.', 'Attraction and festival information is delivered through the buffy backend API. Some images and source content are provided by public tourism sources, including Korea Tourism Organization VisitKorea content servers. Rights to source text and images remain with their original providers and copyright holders.')}}</p>
         <div class="mt-4 flex flex-wrap gap-3 text-sm"><a class="link" href="https://api.visitkorea.or.kr/" target="_blank" rel="noopener noreferrer">TourAPI</a><a class="link" href="https://www.data.go.kr/" target="_blank" rel="noopener noreferrer">{{app.t('공공데이터포털', 'Public Data Portal')}}</a><a class="link" href="https://www.visitbusan.net/" target="_blank" rel="noopener noreferrer">Visit Busan</a></div>
       </div>
 
@@ -57,7 +57,7 @@ const app = useAppStore()
       <div class="card mt-4 p-6">
         <h2 class="text-xl font-bold">{{app.t('API 및 서비스 상태', 'API and service status')}}</h2>
         <p class="mt-3 leading-7 text-[var(--sub)]">{{app.t('현재 서비스는 실제 백엔드 API, 이미지 저장소, 실시간 WebSocket 연결을 사용합니다. API 명세는 아래 문서에서 확인할 수 있습니다.', 'The service currently uses a production backend API, image storage, and a real-time WebSocket connection. The API specification is available below.')}}</p>
-        <a class="link mt-4 inline-flex" href="https://ssafy-first-team.onrender.com/docs" target="_blank" rel="noopener noreferrer">Busan LocalHub API Docs</a>
+        <a class="link mt-4 inline-flex" href="https://ssafy-first-team.onrender.com/docs" target="_blank" rel="noopener noreferrer">buffy API Docs</a>
       </div>
     </article>
   </div>

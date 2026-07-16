@@ -1,4 +1,4 @@
-# Busan LocalHub
+# buffy
 
 부산 관광 정보와 지역별 익명 커뮤니티를 연결하는 Vue 3 프론트엔드입니다.
 
