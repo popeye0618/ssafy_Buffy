@@ -97,6 +97,15 @@ test('shows the new representative hero image', async ({ page }) => {
   await expect(page.locator('img[src="/brand/hero-busan-v2.png"]')).toBeVisible()
 })
 
+test('switches the interface and localized content to English', async ({ page }) => {
+  await page.goto('/attractions')
+  await page.locator('button[aria-label="영어로 전환"]:visible').click()
+  await expect(page.getByRole('heading', { name: 'Busan attractions' })).toBeVisible()
+  await expect(page.getByText('Haeundae Beach')).toBeVisible()
+  await expect(page.getByPlaceholder('Search by name on this page')).toBeVisible()
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+})
+
 test('sends chatbot session headers and renders the answer', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: '부산 관광 챗봇 열기' }).click()

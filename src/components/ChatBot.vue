@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { ExternalLink, Minus, Send, X } from '@lucide/vue'
 import { useAppStore } from '../stores/app'
 import ChatMessageText from './ChatMessageText.vue'
@@ -13,8 +13,12 @@ const loading = ref(false)
 const error = ref('')
 const log = ref<HTMLElement>()
 const sessionId = crypto.randomUUID()
-const messages = ref<ChatMessage[]>([{ who: 'bot', text: '안녕하세요. 부산 여행에 관해 무엇이든 물어보세요.' }])
-const suggestions = ['오늘 부산에서 열리는 축제가 궁금해요', '해운대 근처 추천 장소를 알려주세요', '비 오는 날 갈 만한 곳을 추천해 주세요']
+const greeting = () => app.t('안녕하세요. 부산 여행에 관해 무엇이든 물어보세요.', 'Hello! Ask me anything about traveling in Busan.')
+const messages = ref<ChatMessage[]>([{ who: 'bot', text: greeting() }])
+const suggestions = computed(() => app.lang === 'ko'
+  ? ['오늘 부산에서 열리는 축제가 궁금해요', '해운대 근처 추천 장소를 알려주세요', '비 오는 날 갈 만한 곳을 추천해 주세요']
+  : ['What festivals are happening in Busan today?', 'Recommend places near Haeundae', 'Where should I go on a rainy day?'])
+watch(() => app.lang, () => { if (messages.value.length === 1) messages.value[0].text = greeting() })
 
 function localReference(reference: ApiReference) {
   if (!reference.id || reference.url) return undefined
@@ -48,17 +52,17 @@ async function send(value = input.value) {
 </script>
 
 <template>
-  <button v-if="!open" class="chat-launcher" aria-label="부산 관광 챗봇 열기" @click="open = true"><img src="/brand/symbol.svg" alt=""></button>
-  <section v-else class="chat-panel" aria-label="부산 관광 안내 챗봇">
+  <button v-if="!open" class="chat-launcher" :aria-label="app.t('부산 관광 챗봇 열기','Open Busan travel chatbot')" @click="open = true"><img src="/brand/symbol.svg" alt=""></button>
+  <section v-else class="chat-panel" :aria-label="app.t('부산 관광 안내 챗봇','Busan travel chatbot')">
     <header class="flex min-h-16 items-center gap-3 border-b border-[var(--border)] px-4">
       <span class="grid h-10 w-10 place-items-center rounded-xl bg-[var(--primary-soft)]"><img src="/brand/symbol.svg" alt="" class="h-7 w-7"></span>
-      <div class="flex-1"><strong>부산 관광 안내</strong><div class="text-xs text-[var(--sub)]">AI 여행 도우미</div></div>
-      <button class="icon-btn !h-9 !w-9" aria-label="챗봇 접기" @click="open = false"><Minus :size="17"/></button>
-      <button class="icon-btn !h-9 !w-9" aria-label="닫기" @click="open = false"><X :size="17"/></button>
+      <div class="flex-1"><strong>{{app.t('부산 관광 안내','Busan Travel Guide')}}</strong><div class="text-xs text-[var(--sub)]">{{app.t('AI 여행 도우미','AI travel assistant')}}</div></div>
+      <button class="icon-btn !h-9 !w-9" :aria-label="app.t('챗봇 접기','Minimize chatbot')" @click="open = false"><Minus :size="17"/></button>
+      <button class="icon-btn !h-9 !w-9" :aria-label="app.t('닫기','Close')" @click="open = false"><X :size="17"/></button>
     </header>
       <div ref="log" class="flex-1 space-y-4 overflow-y-auto p-4" aria-live="polite">
         <div v-for="(message, index) in messages" :key="index" class="flex flex-col" :class="message.who === 'me' ? 'items-end' : 'items-start'">
-          <small class="mb-1 text-[var(--sub)]">{{ message.who === 'me' ? '나' : '챗봇' }}</small>
+          <small class="mb-1 text-[var(--sub)]">{{ message.who === 'me' ? app.t('나','Me') : app.t('챗봇','Chatbot') }}</small>
           <div class="max-w-[86%] rounded-2xl p-3 text-sm" :class="message.who === 'me' ? 'rounded-br-sm bg-[var(--primary)] text-[var(--on-primary)]' : 'rounded-bl-sm border border-[var(--border)] bg-[var(--surface)]'">
             <p v-if="message.who === 'me'" class="whitespace-pre-wrap leading-6">{{ message.text }}</p><ChatMessageText v-else :text="message.text"/>
           </div>
@@ -73,12 +77,12 @@ async function send(value = input.value) {
             </template>
           </div>
         </div>
-        <div v-if="loading" class="text-sm text-[var(--sub)]">여행 정보를 찾고 있어요…</div>
+        <div v-if="loading" class="text-sm text-[var(--sub)]">{{app.t('여행 정보를 찾고 있어요…','Finding travel information…')}}</div>
         <p v-if="error" class="error">{{ error }}</p>
       </div>
       <div class="p-4 pt-2">
         <div v-if="messages.length === 1" class="mb-4 flex flex-wrap gap-2"><button v-for="suggestion in suggestions" :key="suggestion" class="chat-suggestion" @click="send(suggestion)">{{ suggestion }}</button></div>
-        <form class="chat-composer" @submit.prevent="send()"><label class="sr-only" for="chat-input">메시지</label><input id="chat-input" v-model="input" maxlength="4000" placeholder="부산 여행에 관해 물어보세요"><button type="submit" :disabled="loading || !input.trim()" aria-label="전송"><Send :size="18"/></button></form>
+        <form class="chat-composer" @submit.prevent="send()"><label class="sr-only" for="chat-input">{{app.t('메시지','Message')}}</label><input id="chat-input" v-model="input" maxlength="4000" :placeholder="app.t('부산 여행에 관해 물어보세요','Ask about traveling in Busan')"><button type="submit" :disabled="loading || !input.trim()" :aria-label="app.t('전송','Send')"><Send :size="18"/></button></form>
       </div>
   </section>
 </template>

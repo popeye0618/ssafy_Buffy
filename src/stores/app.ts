@@ -24,6 +24,7 @@ export const useAppStore = defineStore('app', () => {
   const errors = ref<Record<string,string>>({})
   const serviceHealthy = ref<boolean | null>(null)
 
+  const t = (ko: string, en: string) => lang.value === 'en' ? en : ko
   const tr = (value: {ko:string;en?:string}) => lang.value === 'en' ? (value.en || value.ko) : value.ko
   const boardById = (id: string) => boards.value.find((b) => b.id === id)
   const postById = (id: string) => posts.value.find((p) => p.id === id)
@@ -75,7 +76,8 @@ export const useAppStore = defineStore('app', () => {
   async function searchAll(q:string,page=1,size=20) { const raw=await apiRequest<ApiSearchResponse>(`/api/v1/search${queryString({q,page,size})}`);return {...raw,items:raw.items.map(item=>({...item,description:item.description?inlineStructuredInfo(item.description):item.description}))} }
   async function chat(message:string,history:{role:'user'|'assistant';content:string}[],sessionId:string) { return apiRequest<ApiChatResponse>('/api/v1/chat',{method:'POST',clientId:true,sessionId,body:JSON.stringify({message,language:lang.value,history:history.slice(-10)})}) }
 
-  watch([lang,theme,fontScale],()=>{localStorage.setItem('blh-lang',lang.value);localStorage.setItem('blh-theme',theme.value);localStorage.setItem('blh-font',String(fontScale.value))},{deep:true})
+  watch(lang, value => { localStorage.setItem('blh-lang', value); document.documentElement.lang = value }, { immediate: true })
+  watch([theme,fontScale],()=>{localStorage.setItem('blh-theme',theme.value);localStorage.setItem('blh-font',String(fontScale.value))},{deep:true})
   const isDark=computed(()=>theme.value==='dark')
-  return {lang,theme,fontScale,isDark,boards,boardPage,attractions,attractionPage,festivals,festivalPage,posts,popularPosts,postPage,comments,tags,state,errors,serviceHealthy,tr,boardById,postById,commentsFor,loadBoards,loadBoard,loadAttractions,loadFestivals,loadAttraction,loadFestival,loadTags,createTag,loadPosts,loadPopularPosts,checkHealth,loadPost,uploadMedia,createPost,verifyPostPassword,updatePost,deletePost,loadLike,toggleLike,loadComments,addComment,updateComment,deleteComment,searchAll,chat}
+  return {lang,theme,fontScale,isDark,boards,boardPage,attractions,attractionPage,festivals,festivalPage,posts,popularPosts,postPage,comments,tags,state,errors,serviceHealthy,t,tr,boardById,postById,commentsFor,loadBoards,loadBoard,loadAttractions,loadFestivals,loadAttraction,loadFestival,loadTags,createTag,loadPosts,loadPopularPosts,checkHealth,loadPost,uploadMedia,createPost,verifyPostPassword,updatePost,deletePost,loadLike,toggleLike,loadComments,addComment,updateComment,deleteComment,searchAll,chat}
 })
