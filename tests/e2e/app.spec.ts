@@ -104,6 +104,12 @@ test('switches popular posts to English', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Popular posts' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Haeundae Local Tips' })).toBeVisible()
   await expect(page.getByRole('heading', { name: '인기 게시글' })).toHaveCount(0)
+  const viewport = page.viewportSize()
+  if (viewport && viewport.width <= 560) {
+    await expect(page.getByPlaceholder('Search Busan')).toBeVisible()
+    const columns = await page.locator('.grid-cards').first().evaluate(element => getComputedStyle(element).gridTemplateColumns)
+    expect(columns.trim().split(/\s+/)).toHaveLength(1)
+  }
   const widths = await page.evaluate(() => ({ viewport: document.documentElement.clientWidth, content: document.documentElement.scrollWidth }))
   expect(widths.content).toBeLessThanOrEqual(widths.viewport)
 })
