@@ -98,9 +98,40 @@ test('loads popular posts on the home page', async ({ page }) => {
   await expect(page.getByRole('heading', { name: '해운대 현지 팁' })).toBeVisible()
 })
 
+test('switches popular posts to English', async ({ page }) => {
+  await page.goto('/')
+  await (await openMobileMoreIfNeeded(page, '언어 전환')).click()
+  await expect(page.getByRole('heading', { name: 'Popular posts' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Haeundae Local Tips' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '인기 게시글' })).toHaveCount(0)
+})
+
 test('shows the new representative hero image', async ({ page }) => {
   await page.goto('/')
   await expect(page.locator('img[src="/brand/hero-busan-v2.png"]')).toBeVisible()
+})
+
+test('keeps the mobile home action in the bottom navigation without a top overlap', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile', 'Mobile layout only')
+  await page.goto('/attractions')
+  await expect(page.locator('.page-home-wrap')).toBeHidden()
+  await expect(page.getByRole('navigation', { name: '주요 메뉴' }).getByRole('link', { name: '홈', exact: true })).toBeVisible()
+})
+
+test('offers PWA installation from the mobile more menu', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile', 'Mobile layout only')
+  await page.goto('/')
+  await page.evaluate(() => {
+    const event = new Event('beforeinstallprompt', { cancelable: true })
+    Object.assign(event, {
+      prompt: async () => { (window as any).__pwaPrompted = true },
+      userChoice: Promise.resolve({ outcome: 'dismissed', platform: 'web' }),
+    })
+    window.dispatchEvent(event)
+  })
+  await page.getByRole('button', { name: '더보기' }).click()
+  await page.getByRole('button', { name: '앱으로 설치' }).click()
+  await expect.poll(() => page.evaluate(() => Boolean((window as any).__pwaPrompted))).toBe(true)
 })
 
 test('switches the interface and localized content to English', async ({ page }) => {
