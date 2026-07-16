@@ -142,7 +142,7 @@ function openComment(target: Comment, action: "edit" | "delete") {
   commentTarget.value = target;
   commentDialog.value = action === "edit" ? "edit-password" : "delete";
   actionPassword.value = "";
-  actionBody.value = target.body;
+  actionBody.value = app.commentBody(target);
   actionError.value = "";
 }
 function nextEdit() {
@@ -295,7 +295,7 @@ async function completeComment() {
                 <MessageSquareReply :size="15" />{{ app.t("익명", "Anonymous") }}
                 {{ parentOf(c)?.author || app.t("삭제됨", "Deleted") }}{{ app.t("에게 답글", " · Reply") }}
               </div>
-              <p class="mt-2 whitespace-pre-wrap leading-7">{{ c.body }}</p>
+              <p class="mt-2 whitespace-pre-wrap leading-7">{{ app.commentBody(c) }}</p>
               <div class="mt-3 flex flex-wrap gap-4">
                 <button class="reply-action !mt-0" @click="replyTo = c.id">
                   <MessageSquareReply :size="16" />{{ app.t("답글", "Reply") }}</button

@@ -19,6 +19,7 @@ for(const field of ['nameEn','categoryEn','descriptionEn']) assert(field in (sch
 for(const field of ['nameEn','categoryEn','summaryEn','descriptionEn','addressEn']) assert(field in (schemas.AttractionResponse?.properties||{}),`AttractionResponse에 ${field}이 없습니다.`)
 for(const field of ['nameEn','placeEn','periodEn','summaryEn']) assert(field in (schemas.FestivalResponse?.properties||{}),`FestivalResponse에 ${field}이 없습니다.`)
 for(const field of ['titleKr','titleEn','contentKr','contentEn']) assert(field in (schemas.PostResponse?.properties||{}),`PostResponse에 ${field}이 없습니다.`)
+for(const field of ['contentKr','contentEn']) assert(field in (schemas.CommentResponse?.properties||{}),`CommentResponse에 ${field}이 없습니다.`)
 
 assert(responseRef('/api/v1/tourism/attractions')==='#/components/schemas/AttractionPageResponse','관광지 목록 응답이 AttractionPageResponse가 아닙니다.')
 assert(responseRef('/api/v1/tourism/festivals')==='#/components/schemas/FestivalPageResponse','축제 목록 응답이 FestivalPageResponse가 아닙니다.')

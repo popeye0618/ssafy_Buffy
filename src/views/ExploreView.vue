@@ -68,7 +68,7 @@ watch(() => props.type, () => {
       <RouterLink v-for="item in items" :key="item.id" :to="`/${type === 'attraction' ? 'attractions' : 'festivals'}/${item.id}`" class="card card-hover overflow-hidden">
         <img v-if="item.image" :src="item.image" :alt="app.tr(item.name)" class="h-[170px] w-full object-cover"><div v-else class="placeholder h-[170px]">{{app.t('이미지 준비 중','Image coming soon')}}</div>
         <div class="p-5">
-          <template v-if="type === 'attraction'"><h2 class="text-lg font-bold">{{ app.tr((item as any).name) }}</h2><p class="mt-2 text-sm text-[var(--sub)]">{{ app.tr((item as any).area) }}</p><StructuredInfoText compact :text="app.tr((item as any).description)"/><div class="mt-3"><TagBadge v-for="tag in (item as any).tags" :key="tag.label.ko" :tag="tag"/></div></template>
+          <template v-if="type === 'attraction'"><h2 class="text-lg font-bold">{{ app.tr((item as any).name) }}</h2><p class="mt-2 text-sm text-[var(--sub)]">{{ app.tr((item as any).area) }}</p><StructuredInfoText compact :text="app.tr((item as any).description)" :lang="app.lang"/><div class="mt-3"><TagBadge v-for="tag in (item as any).tags" :key="tag.label.ko" :tag="tag"/></div></template>
           <template v-else><FestivalStatusBadge :status="(item as any).status"/><h2 class="mt-3 text-lg font-bold">{{ app.tr((item as any).name) }}</h2><p class="mt-2 text-sm text-[var(--sub)]">{{ app.tr((item as any).place) }} · {{ app.tr((item as any).period) }}</p></template>
         </div>
       </RouterLink>

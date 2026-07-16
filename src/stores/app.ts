@@ -37,6 +37,7 @@ export const useAppStore = defineStore('app', () => {
   const tr = (value: {ko:string;en?:string}) => lang.value === 'en' ? (value.en || value.ko) : value.ko
   const postTitle = (post:Post) => tr({ko:post.title,en:post.titleEn})
   const postBody = (post:Post) => tr({ko:post.body,en:post.bodyEn})
+  const commentBody = (comment:Comment) => tr({ko:comment.body,en:comment.bodyEn})
   const boardById = (id: string) => boards.value.find((b) => b.id === id)
   const postById = (id: string) => posts.value.find((p) => p.id === id)
   const commentsFor = (postId: string) => comments.value.filter((c) => c.postId === postId)
@@ -82,7 +83,7 @@ export const useAppStore = defineStore('app', () => {
   async function toggleLike(id:string) { const item=postById(id);const result=await apiRequest<ApiLike>(`/api/v1/posts/${id}/likes`,{method:item?.liked?'DELETE':'POST',clientId:true});if(item){item.liked=result.liked;item.likes=result.likeCount} }
   async function loadComments(postId:string) { const raw=await apiRequest<ApiPage<ApiComment>>(`/api/v1/posts/${postId}/comments?page=1&size=100`);comments.value=flattenComments(raw.items);return comments.value }
   async function addComment(postId:string,body:string,password:string,parentId?:string) { await apiRequest(`/api/v1/posts/${postId}/comments`,{method:'POST',clientId:true,body:JSON.stringify({content:body,password,parentId:parentId?Number(parentId):null})});await loadComments(postId);const post=postById(postId);if(post)post.comments++ }
-  async function updateComment(id:string,body:string,password:string) { const raw=await apiRequest<ApiComment>(`/api/v1/comments/${id}`,{method:'PUT',body:JSON.stringify({content:body,password})});const item=comments.value.find(x=>x.id===id);if(item){item.body=raw.content;item.updatedAt=raw.updatedAt||undefined} }
+  async function updateComment(id:string,body:string,password:string) { const raw=await apiRequest<ApiComment>(`/api/v1/comments/${id}`,{method:'PUT',body:JSON.stringify({content:body,password})});const item=comments.value.find(x=>x.id===id);if(item){item.body=raw.contentKr||raw.content;item.bodyEn=raw.contentEn||undefined;item.updatedAt=raw.updatedAt||undefined} }
   async function deleteComment(id:string,password:string) { const item=comments.value.find(x=>x.id===id);await apiRequest(`/api/v1/comments/${id}`,{method:'DELETE',body:JSON.stringify({password})});if(item){item.deleted=true;item.body='';const post=postById(item.postId);if(post&&post.comments>0)post.comments--} }
   async function searchAll(q:string,page=1,size=20) { const raw=await apiRequest<ApiSearchResponse>(`/api/v1/search${queryString({q,page,size})}`);return {...raw,items:raw.items.map(item=>({...item,description:item.description?inlineStructuredInfo(item.description):item.description}))} }
   async function chat(message:string,history:{role:'user'|'assistant';content:string}[],sessionId:string) { return apiRequest<ApiChatResponse>('/api/v1/chat',{method:'POST',clientId:true,sessionId,body:JSON.stringify({message,language:lang.value,history:history.slice(-10)})}) }
@@ -120,5 +121,5 @@ export const useAppStore = defineStore('app', () => {
   watch(lang, value => { localStorage.setItem('blh-lang', value); document.documentElement.lang = value }, { immediate: true })
   watch([theme,fontScale],()=>{localStorage.setItem('blh-theme',theme.value);localStorage.setItem('blh-font',String(fontScale.value))},{deep:true})
   const isDark=computed(()=>theme.value==='dark')
-  return {lang,theme,fontScale,isDark,boards,boardPage,attractions,attractionPage,festivals,festivalPage,posts,popularPosts,postPage,comments,tags,state,errors,serviceHealthy,realtimeConnected,connectedCount,latestPostEvent,t,tr,postTitle,postBody,boardById,postById,commentsFor,loadBoards,loadBoard,loadAttractions,loadFestivals,loadAttraction,loadFestival,loadTags,createTag,loadPosts,loadPopularPosts,checkHealth,loadPost,uploadMedia,createPost,verifyPostPassword,updatePost,deletePost,loadLike,toggleLike,loadComments,addComment,updateComment,deleteComment,searchAll,chat,connectRealtime,disconnectRealtime}
+  return {lang,theme,fontScale,isDark,boards,boardPage,attractions,attractionPage,festivals,festivalPage,posts,popularPosts,postPage,comments,tags,state,errors,serviceHealthy,realtimeConnected,connectedCount,latestPostEvent,t,tr,postTitle,postBody,commentBody,boardById,postById,commentsFor,loadBoards,loadBoard,loadAttractions,loadFestivals,loadAttraction,loadFestival,loadTags,createTag,loadPosts,loadPopularPosts,checkHealth,loadPost,uploadMedia,createPost,verifyPostPassword,updatePost,deletePost,loadLike,toggleLike,loadComments,addComment,updateComment,deleteComment,searchAll,chat,connectRealtime,disconnectRealtime}
 })

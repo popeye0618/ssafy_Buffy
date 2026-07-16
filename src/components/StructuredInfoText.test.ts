@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parseStructuredInfo } from './StructuredInfoText.vue'
+import { localizedInfoLabel, parseStructuredInfo } from './StructuredInfoText.vue'
 
 describe('structured tourism information', () => {
   it('separates labels, values, dates, and notices', () => {
@@ -18,5 +18,10 @@ describe('structured tourism information', () => {
       { label: 'Type', value: 'Busan attraction' },
       { label: 'Address', value: '부산광역시 수영구 연수로379번길 42 (수영동)' },
     ])
+  })
+
+  it('localizes Korean fallback labels in English mode', () => {
+    expect(localizedInfoLabel('주소', 'en')).toBe('Address')
+    expect(localizedInfoLabel('우편번호', 'en')).toBe('Postal code')
   })
 })

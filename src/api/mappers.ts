@@ -12,7 +12,7 @@ export const mapFestival = (item: ApiFestival): Festival => ({ id:item.contentId
 export const mapPost = (item: ApiPost): Post => ({ id:String(item.postId), boardId:String(item.boardId), title:item.titleKr||item.title, titleEn:item.titleEn||undefined, body:item.contentKr||item.content, bodyEn:item.contentEn||undefined, author:anonymousId(item.author), views:item.viewCount, likes:item.likeCount, comments:item.commentCount, date:item.createdAt||'', updatedAt:item.updatedAt||undefined, tags:(item.tags||[]).map(mapTag), media:(item.media||[]).map(x=>({id:x.mediaId,url:x.imageUrl})), images:item.media?.length||0 })
 export function flattenComments(items: ApiComment[], parentId?: string): Comment[] {
   return items.flatMap(item => {
-    const current: Comment = { id:String(item.commentId), postId:String(item.postId), parentId:item.parentId == null ? parentId : String(item.parentId), author:anonymousId(item.author), body:item.content, date:item.createdAt||'', updatedAt:item.updatedAt||undefined, likes:0, deleted:!item.content }
+    const current: Comment = { id:String(item.commentId), postId:String(item.postId), parentId:item.parentId == null ? parentId : String(item.parentId), author:anonymousId(item.author), body:item.contentKr||item.content, bodyEn:item.contentEn||undefined, date:item.createdAt||'', updatedAt:item.updatedAt||undefined, likes:0, deleted:!item.content }
     return [current, ...flattenComments(item.children||[], current.id)]
   })
 }

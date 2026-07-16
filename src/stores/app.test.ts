@@ -98,7 +98,7 @@ describe('API-backed app store', () => {
   })
 
   it('reads comments from the deployed paged response', async () => {
-    const fetchMock = vi.fn(() => response({ items: [{ commentId: 1, postId: 3, parentId: null, author: '12345678-abcd-efgh', content: '댓글', createdAt: null, updatedAt: null, children: [] }], total: 1, page: 1, size: 100 }))
+    const fetchMock = vi.fn(() => response({ items: [{ commentId: 1, postId: 3, parentId: null, author: '12345678-abcd-efgh', content: '댓글', contentKr: '댓글', contentEn: 'Comment', createdAt: null, updatedAt: null, children: [] }], total: 1, page: 1, size: 100 }))
     vi.stubGlobal('fetch', fetchMock)
     const store = useAppStore()
     await store.loadComments('3')
@@ -106,6 +106,9 @@ describe('API-backed app store', () => {
     const url = new URL(String(calls[0][0]))
     expect(url.searchParams.get('size')).toBe('100')
     expect(store.comments[0].author).toBe('12345678')
+    expect(store.commentBody(store.comments[0])).toBe('댓글')
+    store.lang = 'en'
+    expect(store.commentBody(store.comments[0])).toBe('Comment')
   })
 
   it('sends both required chatbot identity headers and at most ten history items', async () => {

@@ -131,6 +131,44 @@ test('switches post creation and comment controls to English', async ({ page }) 
   await expect(page.getByRole('button', { name: 'Post comment' })).toBeVisible()
 })
 
+test('switches translated comments and replies to English', async ({ page }) => {
+  await page.route('**/api/v1/posts/1/comments*', route => route.fulfill({
+    json: {
+      items: [{
+        commentId: 7,
+        postId: 1,
+        parentId: null,
+        author: 'ef12',
+        content: '부산 정말 좋아요',
+        contentKr: '부산 정말 좋아요',
+        contentEn: 'I really like Busan',
+        createdAt: '2026-07-16T10:00:00Z',
+        updatedAt: null,
+        children: [{
+          commentId: 8,
+          postId: 1,
+          parentId: 7,
+          author: 'ab34',
+          content: '저도요',
+          contentKr: '저도요',
+          contentEn: 'Me too',
+          createdAt: '2026-07-16T10:05:00Z',
+          updatedAt: null,
+          children: [],
+        }],
+      }],
+      total: 2,
+      page: 1,
+      size: 100,
+    },
+  }))
+  await page.goto('/boards/1/posts/1')
+  await (await openMobileMoreIfNeeded(page, '언어 전환')).click()
+  await expect(page.getByText('I really like Busan')).toBeVisible()
+  await expect(page.getByText('Me too')).toBeVisible()
+  await expect(page.getByText('부산 정말 좋아요')).toHaveCount(0)
+})
+
 test('shows the empty post list message in English', async ({ page }) => {
   await page.route('**/api/v1/boards/1/posts*', route => route.fulfill({ json: { items: [], total: 0, page: 1, size: 10 } }))
   await page.goto('/boards/1/posts')

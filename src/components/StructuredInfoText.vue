@@ -1,6 +1,9 @@
 <script lang="ts">
 export type InfoPart = { label?: string; value: string; note?: boolean }
 
+const englishLabels: Record<string, string> = { '주소': 'Address', '우편번호': 'Postal code', '전화': 'Phone', '행사기간': 'Event dates', '이용시간': 'Hours', '장소': 'Venue', '기간': 'Dates' }
+export const localizedInfoLabel = (label: string, lang: 'ko' | 'en') => lang === 'en' ? (englishLabels[label] || label) : label
+
 function formatCompactDate(value: string) {
   return value.replace(/\b(\d{4})(\d{2})(\d{2})\b/g, '$1. $2. $3.')
 }
@@ -35,10 +38,11 @@ export function parseStructuredInfo(text: string): InfoPart[] {
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const props = withDefaults(defineProps<{ text: string; compact?: boolean }>(), { compact: false })
+const props = withDefaults(defineProps<{ text: string; compact?: boolean; lang?: 'ko' | 'en' }>(), { compact: false, lang: 'ko' })
 const parts = computed(() => parseStructuredInfo(props.text || ''))
 const visible = computed(() => props.compact ? parts.value.filter(part => !part.note).slice(0, 2) : parts.value)
 const structured = computed(() => parts.value.length > 1 || parts.value.some(part => part.label || part.note))
+const labelFor = (label?: string) => label ? localizedInfoLabel(label, props.lang) : label
 </script>
 
 <template>
@@ -46,7 +50,7 @@ const structured = computed(() => parts.value.length > 1 || parts.value.some(par
     <template v-for="(part, index) in visible" :key="`${part.label}-${index}`">
       <p v-if="part.note" class="info-note"><span aria-hidden="true">※</span>{{ part.value }}</p>
       <div v-else class="info-row">
-        <span v-if="part.label" class="info-label">{{ part.label }}</span>
+        <span v-if="part.label" class="info-label">{{ labelFor(part.label) }}</span>
         <span class="info-value">{{ part.value }}</span>
       </div>
     </template>

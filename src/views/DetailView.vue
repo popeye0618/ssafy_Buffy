@@ -42,12 +42,12 @@ watch(() => props.id, load)
           <div class="mt-6">
             <h1 class="text-4xl font-extrabold">{{ app.tr(item.name) }}</h1>
             <template v-if="type === 'attraction'">
-              <StructuredInfoText :text="app.tr((item as any).description)" />
+              <StructuredInfoText :text="app.tr((item as any).description)" :lang="app.lang" />
               <div class="mt-4"><TagBadge v-for="tag in (item as any).tags" :key="tag.label.ko" :tag="tag"/></div>
             </template>
             <template v-else>
               <FestivalStatusBadge class="mt-4" :status="(item as any).status"/>
-              <StructuredInfoText :text="app.tr((item as any).summary)" />
+              <StructuredInfoText :text="app.tr((item as any).summary)" :lang="app.lang" />
             </template>
           </div>
         </div>
