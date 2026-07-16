@@ -127,4 +127,20 @@ describe('API-backed app store', () => {
     await store.createPost({ boardId: '1', title: '새 글', body: '본문', tags: [], media: [], password: '5678' })
     expect(JSON.stringify(store.$state)).not.toContain('5678')
   })
+
+  it('sends the documented TRANSPORT category for transit tags', async () => {
+    const fetchMock = vi.fn(() => response({ postId: 10, boardId: 1, title: '교통 정보', author: 'anon', content: '본문', viewCount: 0, likeCount: 0, commentCount: 0, createdAt: null, updatedAt: null, tags: [], media: [] }, 201))
+    vi.stubGlobal('fetch', fetchMock)
+    await useAppStore().createPost({
+      boardId: '1',
+      title: '교통 정보',
+      body: '본문',
+      tags: [{ id: 5, kind: 'transit', label: { ko: '교통', en: 'Transportation' } }],
+      media: [],
+      password: '5678',
+    })
+    const calls = fetchMock.mock.calls as unknown as [RequestInfo | URL, RequestInit?][]
+    const body = JSON.parse(String(calls[0][1]!.body))
+    expect(body.tags).toEqual([{ tagId: 5, name: '교통', category: 'TRANSPORT' }])
+  })
 })

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onBeforeUnmount, onMounted } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import { Home } from '@lucide/vue'
 import AppUtilities from './components/AppUtilities.vue'
@@ -8,6 +9,8 @@ import { useAppStore } from './stores/app'
 
 const app = useAppStore()
 const route = useRoute()
+onMounted(app.connectRealtime)
+onBeforeUnmount(app.disconnectRealtime)
 </script>
 
 <template>

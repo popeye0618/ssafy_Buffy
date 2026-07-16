@@ -60,6 +60,12 @@ watch([q, sort, tagFilter], () => {
   timer = window.setTimeout(load, 250);
 });
 watch(page, load);
+watch(
+  () => app.latestPostEvent,
+  (event) => {
+    if (event && String(event.boardId) === boardId.value) load();
+  },
+);
 </script>
 <template>
   <div class="page fade">

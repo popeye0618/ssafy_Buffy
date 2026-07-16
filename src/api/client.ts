@@ -1,4 +1,4 @@
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'https://ssafy-first-team.onrender.com').replace(/\/$/, '')
+export const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'https://ssafy-first-team.onrender.com').replace(/\/$/, '')
 
 export class ApiError extends Error {
   constructor(public status: number, message: string, public details?: unknown) { super(message) }

@@ -1,6 +1,8 @@
 import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
-import { ApiError, apiRequest, queryString } from '../api/client'
+import { ApiError, apiRequest, getClientId, queryString } from '../api/client'
+import { createRealtimeUrl, parseRealtimeEvent } from '../api/realtime'
+import type { PostCreatedEvent } from '../api/realtime'
 import { flattenComments, inlineStructuredInfo, mapAttraction, mapBoard, mapFestival, mapPost, mapTag } from '../api/mappers'
 import type { ApiAttraction, ApiBoard, ApiChatResponse, ApiComment, ApiFestival, ApiLike, ApiMedia, ApiPage, ApiPost, ApiSearchResponse, ApiTag, ApiTagCreate, PostWritePayload } from '../api/contracts'
 import type { Board, Comment, Festival, LoadState, Media, PageResult, Post, Tag } from '../types'
@@ -23,6 +25,13 @@ export const useAppStore = defineStore('app', () => {
   const state = ref<Record<string,LoadState>>({})
   const errors = ref<Record<string,string>>({})
   const serviceHealthy = ref<boolean | null>(null)
+  const realtimeConnected = ref(false)
+  const connectedCount = ref(0)
+  const latestPostEvent = ref<PostCreatedEvent['data'] | null>(null)
+  let realtimeSocket: WebSocket | null = null
+  let reconnectTimer: number | undefined
+  let reconnectAttempt = 0
+  let realtimeStopped = true
 
   const t = (ko: string, en: string) => lang.value === 'en' ? en : ko
   const tr = (value: {ko:string;en?:string}) => lang.value === 'en' ? (value.en || value.ko) : value.ko
@@ -61,7 +70,7 @@ export const useAppStore = defineStore('app', () => {
   async function loadPopularPosts(page=1,size=5) { const key='popular';setLoading(key);try{const raw=await apiRequest<ApiPage<ApiPost>>(`/api/v1/posts/popular${queryString({page,size})}`);popularPosts.value=raw.items.map(mapPost);state.value[key]='ready';return popularPosts.value}catch(e){setError(key,e);throw e} }
   async function checkHealth(){try{const result=await apiRequest<{status:string}>('/health');serviceHealthy.value=result.status==='healthy'}catch{serviceHealthy.value=false}}
   async function loadPost(id:string) { const key='post';setLoading(key);try{const item=mapPost(await apiRequest<ApiPost>(`/api/v1/posts/${id}`,{clientId:true}));posts.value=[...posts.value.filter(x=>x.id!==id),item];state.value[key]='ready';return item}catch(e){setError(key,e);throw e} }
-  const toWrite=(input:{title:string;body:string;tags:Tag[];media:Media[];password:string}):PostWritePayload=>({title:input.title,content:input.body,password:input.password,tags:input.tags.filter(t=>t.id).map(t=>({tagId:t.id!,name:t.label.ko,category:t.kind.toUpperCase()})),media:input.media.map(m=>({mediaId:m.id,imageUrl:m.url}))})
+  const toWrite=(input:{title:string;body:string;tags:Tag[];media:Media[];password:string}):PostWritePayload=>({title:input.title,content:input.body,password:input.password,tags:input.tags.filter(t=>t.id).map(t=>({tagId:t.id!,name:t.label.ko,category:t.kind==='transit'?'TRANSPORT':t.kind.toUpperCase()})),media:input.media.map(m=>({mediaId:m.id,imageUrl:m.url}))})
   async function uploadMedia(file:File) { const form=new FormData();form.append('file',file);const raw=await apiRequest<ApiMedia>('/api/v1/media',{method:'POST',body:form});return {id:raw.mediaId,url:raw.imageUrl} }
   async function createPost(input:{boardId:string;title:string;body:string;tags:Tag[];media:Media[];password:string}) { const item=mapPost(await apiRequest<ApiPost>(`/api/v1/boards/${input.boardId}/posts`,{method:'POST',clientId:true,body:JSON.stringify(toWrite(input))}));posts.value.unshift(item);return item }
   async function verifyPostPassword(id:string,password:string) { await apiRequest(`/api/v1/posts/${id}/password/verify`,{method:'POST',clientId:true,body:JSON.stringify({password})}) }
@@ -76,8 +85,38 @@ export const useAppStore = defineStore('app', () => {
   async function searchAll(q:string,page=1,size=20) { const raw=await apiRequest<ApiSearchResponse>(`/api/v1/search${queryString({q,page,size})}`);return {...raw,items:raw.items.map(item=>({...item,description:item.description?inlineStructuredInfo(item.description):item.description}))} }
   async function chat(message:string,history:{role:'user'|'assistant';content:string}[],sessionId:string) { return apiRequest<ApiChatResponse>('/api/v1/chat',{method:'POST',clientId:true,sessionId,body:JSON.stringify({message,language:lang.value,history:history.slice(-10)})}) }
 
+  function connectRealtime() {
+    realtimeStopped=false
+    if(typeof WebSocket==='undefined'||realtimeSocket?.readyState===WebSocket.OPEN||realtimeSocket?.readyState===WebSocket.CONNECTING)return
+    const socket=new WebSocket(createRealtimeUrl(getClientId()))
+    realtimeSocket=socket
+    socket.addEventListener('open',()=>{if(realtimeSocket!==socket)return;realtimeConnected.value=true;reconnectAttempt=0})
+    socket.addEventListener('message',(message)=>{
+      const event=parseRealtimeEvent(String(message.data))
+      if(!event)return
+      if(event.event==='presence.updated'){connectedCount.value=event.data.connectedCount;return}
+      latestPostEvent.value=event.data
+      const board=boardById(String(event.data.boardId));if(board)board.count++
+    })
+    socket.addEventListener('close',()=>{
+      if(realtimeSocket!==socket)return
+      realtimeSocket=null;realtimeConnected.value=false
+      if(realtimeStopped)return
+      const delay=Math.min(1000*2**reconnectAttempt++,30000)
+      reconnectTimer=window.setTimeout(connectRealtime,delay)
+    })
+    socket.addEventListener('error',()=>socket.close())
+  }
+
+  function disconnectRealtime() {
+    realtimeStopped=true
+    if(reconnectTimer!==undefined){window.clearTimeout(reconnectTimer);reconnectTimer=undefined}
+    const socket=realtimeSocket;realtimeSocket=null;realtimeConnected.value=false
+    if(socket&&socket.readyState< WebSocket.CLOSING)socket.close(1000,'App closed')
+  }
+
   watch(lang, value => { localStorage.setItem('blh-lang', value); document.documentElement.lang = value }, { immediate: true })
   watch([theme,fontScale],()=>{localStorage.setItem('blh-theme',theme.value);localStorage.setItem('blh-font',String(fontScale.value))},{deep:true})
   const isDark=computed(()=>theme.value==='dark')
-  return {lang,theme,fontScale,isDark,boards,boardPage,attractions,attractionPage,festivals,festivalPage,posts,popularPosts,postPage,comments,tags,state,errors,serviceHealthy,t,tr,boardById,postById,commentsFor,loadBoards,loadBoard,loadAttractions,loadFestivals,loadAttraction,loadFestival,loadTags,createTag,loadPosts,loadPopularPosts,checkHealth,loadPost,uploadMedia,createPost,verifyPostPassword,updatePost,deletePost,loadLike,toggleLike,loadComments,addComment,updateComment,deleteComment,searchAll,chat}
+  return {lang,theme,fontScale,isDark,boards,boardPage,attractions,attractionPage,festivals,festivalPage,posts,popularPosts,postPage,comments,tags,state,errors,serviceHealthy,realtimeConnected,connectedCount,latestPostEvent,t,tr,boardById,postById,commentsFor,loadBoards,loadBoard,loadAttractions,loadFestivals,loadAttraction,loadFestival,loadTags,createTag,loadPosts,loadPopularPosts,checkHealth,loadPost,uploadMedia,createPost,verifyPostPassword,updatePost,deletePost,loadLike,toggleLike,loadComments,addComment,updateComment,deleteComment,searchAll,chat,connectRealtime,disconnectRealtime}
 })
