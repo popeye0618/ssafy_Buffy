@@ -35,6 +35,8 @@ export const useAppStore = defineStore('app', () => {
 
   const t = (ko: string, en: string) => lang.value === 'en' ? en : ko
   const tr = (value: {ko:string;en?:string}) => lang.value === 'en' ? (value.en || value.ko) : value.ko
+  const postTitle = (post:Post) => tr({ko:post.title,en:post.titleEn})
+  const postBody = (post:Post) => tr({ko:post.body,en:post.bodyEn})
   const boardById = (id: string) => boards.value.find((b) => b.id === id)
   const postById = (id: string) => posts.value.find((p) => p.id === id)
   const commentsFor = (postId: string) => comments.value.filter((c) => c.postId === postId)
@@ -118,5 +120,5 @@ export const useAppStore = defineStore('app', () => {
   watch(lang, value => { localStorage.setItem('blh-lang', value); document.documentElement.lang = value }, { immediate: true })
   watch([theme,fontScale],()=>{localStorage.setItem('blh-theme',theme.value);localStorage.setItem('blh-font',String(fontScale.value))},{deep:true})
   const isDark=computed(()=>theme.value==='dark')
-  return {lang,theme,fontScale,isDark,boards,boardPage,attractions,attractionPage,festivals,festivalPage,posts,popularPosts,postPage,comments,tags,state,errors,serviceHealthy,realtimeConnected,connectedCount,latestPostEvent,t,tr,boardById,postById,commentsFor,loadBoards,loadBoard,loadAttractions,loadFestivals,loadAttraction,loadFestival,loadTags,createTag,loadPosts,loadPopularPosts,checkHealth,loadPost,uploadMedia,createPost,verifyPostPassword,updatePost,deletePost,loadLike,toggleLike,loadComments,addComment,updateComment,deleteComment,searchAll,chat,connectRealtime,disconnectRealtime}
+  return {lang,theme,fontScale,isDark,boards,boardPage,attractions,attractionPage,festivals,festivalPage,posts,popularPosts,postPage,comments,tags,state,errors,serviceHealthy,realtimeConnected,connectedCount,latestPostEvent,t,tr,postTitle,postBody,boardById,postById,commentsFor,loadBoards,loadBoard,loadAttractions,loadFestivals,loadAttraction,loadFestival,loadTags,createTag,loadPosts,loadPopularPosts,checkHealth,loadPost,uploadMedia,createPost,verifyPostPassword,updatePost,deletePost,loadLike,toggleLike,loadComments,addComment,updateComment,deleteComment,searchAll,chat,connectRealtime,disconnectRealtime}
 })

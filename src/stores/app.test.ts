@@ -48,11 +48,14 @@ describe('API-backed app store', () => {
   })
 
   it('maps paged post responses', async () => {
-    vi.stubGlobal('fetch', vi.fn(() => response({ items: [{ postId: 3, boardId: 1, title: '테스트', author: 'anon', content: '내용', viewCount: 2, likeCount: 1, commentCount: 0, createdAt: '2026-07-15T00:00:00Z', updatedAt: null, tags: [], media: [] }], total: 1, page: 1, size: 10 })))
+    vi.stubGlobal('fetch', vi.fn(() => response({ items: [{ postId: 3, boardId: 1, title: '테스트', titleKr: '테스트', titleEn: 'Test', author: 'anon', content: '내용', contentKr: '내용', contentEn: 'Content', viewCount: 2, likeCount: 1, commentCount: 0, createdAt: '2026-07-15T00:00:00Z', updatedAt: null, tags: [], media: [] }], total: 1, page: 1, size: 10 })))
     const store = useAppStore()
     await store.loadPosts('1')
     expect(store.postPage.items[0].id).toBe('3')
     expect(store.postPage.items[0].body).toBe('내용')
+    store.lang = 'en'
+    expect(store.postTitle(store.postPage.items[0])).toBe('Test')
+    expect(store.postBody(store.postPage.items[0])).toBe('Content')
   })
 
   it('maps paged attraction and festival responses', async () => {

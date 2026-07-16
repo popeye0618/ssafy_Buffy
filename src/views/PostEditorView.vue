@@ -36,8 +36,8 @@ async function prepare() {
     if (editing.value) {
       const id = String(route.params.postId);
       const item = await app.loadPost(id);
-      title.value = item.title;
-      body.value = item.body;
+      title.value = app.postTitle(item);
+      body.value = app.postBody(item);
       selected.value = [...item.tags];
       existingMedia.value = [...item.media];
       const handedOff = takeEditPassword(id);

@@ -134,7 +134,7 @@ watch(
         :key="p.id"
         :to="`/boards/${p.boardId}/posts/${p.id}`"
         class="block border-b border-[var(--border)] p-5 last:border-0 hover:bg-[var(--highlight)]"
-        ><h2 class="font-bold">{{ p.title }}</h2>
+        ><h2 class="font-bold">{{ app.postTitle(p) }}</h2>
         <div class="mt-2 flex flex-wrap gap-1">
           <TagBadge v-for="t in p.tags" :key="t.id || t.label.ko" :tag="t" />
         </div>

@@ -195,7 +195,7 @@ async function completeComment() {
               />
             </div>
             <h1 class="mt-4 text-3xl font-extrabold md:text-4xl">
-              {{ post.title }}
+              {{ app.postTitle(post) }}
             </h1>
             <p class="mt-3 text-sm text-[var(--sub)]">
               {{ app.t("익명", "Anonymous") }} {{ post.author }} ·
@@ -211,7 +211,7 @@ async function completeComment() {
           </div>
         </div>
         <div class="mt-7 whitespace-pre-wrap text-lg leading-8">
-          {{ post.body }}
+          {{ app.postBody(post) }}
         </div>
         <div
           v-if="post.media.length"

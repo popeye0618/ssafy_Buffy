@@ -3,7 +3,13 @@ import { expect, test } from '@playwright/test'
 const board = { boardId: 1, name: '해운대 해수욕장', nameEn: 'Haeundae Beach', category: '관광지', categoryEn: 'Attraction', description: '주소: 부산광역시 동구 영초길197번길 9 | 우편번호: 48808', descriptionEn: 'Address: Busan | Postal code: 48808', image: '', recentPostCount: 1, lastActivityAt: null, recentExcerpt: '현지 팁' }
 const attraction = { contentId: 'haeundae', name: '해운대 해수욕장', nameEn: 'Haeundae Beach', category: '해수욕장', categoryEn: 'Beach', summary: '부산 대표 해변', summaryEn: 'Busan’s signature beach', description: '넓은 백사장과 야경', descriptionEn: 'A wide beach with night views', image: '', address: '부산 해운대구', addressEn: 'Haeundae-gu, Busan', boardId: 1 }
 const festival = { contentId: 'fest', name: '부산바다축제', nameEn: 'Busan Sea Festival', status: 'UPCOMING', place: '해운대', placeEn: 'Haeundae', period: '2026.08', periodEn: 'Aug 2026', image: '', summary: '여름 축제', summaryEn: 'Summer festival', boardId: 1 }
-const post = { postId: 1, boardId: 1, title: '해운대 현지 팁', author: 'abcd', content: '산책하기 좋은 시간은 저녁입니다.', viewCount: 12, likeCount: 2, commentCount: 0, createdAt: '2026-07-15T10:00:00Z', updatedAt: null, tags: [{ tagId: 9, name: '후기', nameEn: 'Review', category: 'REVIEW' }], media: [] }
+const post = { postId: 1, boardId: 1, title: '해운대 현지 팁', titleKr: '해운대 현지 팁', titleEn: 'Haeundae Local Tips', author: 'abcd', content: '산책하기 좋은 시간은 저녁입니다.', contentKr: '산책하기 좋은 시간은 저녁입니다.', contentEn: 'Evening is the best time for a walk.', viewCount: 12, likeCount: 2, commentCount: 0, createdAt: '2026-07-15T10:00:00Z', updatedAt: null, tags: [{ tagId: 9, name: '후기', nameEn: 'Review', category: 'REVIEW' }], media: [] }
+
+async function openMobileMoreIfNeeded(page: import('@playwright/test').Page, controlLabel: string) {
+  const control = page.locator(`button[aria-label="${controlLabel}"]:visible`)
+  if (!await control.isVisible()) await page.getByRole('button', { name: '더보기' }).click()
+  return page.locator(`button[aria-label="${controlLabel}"]:visible`)
+}
 
 test.beforeEach(async ({ page }) => {
   let liked = false
@@ -99,7 +105,7 @@ test('shows the new representative hero image', async ({ page }) => {
 
 test('switches the interface and localized content to English', async ({ page }) => {
   await page.goto('/attractions')
-  await page.locator('button[aria-label="언어 전환"]:visible').click()
+  await (await openMobileMoreIfNeeded(page, '언어 전환')).click()
   await expect(page.getByRole('heading', { name: 'Busan attractions' })).toBeVisible()
   await expect(page.getByText('Haeundae Beach')).toBeVisible()
   await expect(page.getByPlaceholder('Search by name on this page')).toBeVisible()
@@ -108,13 +114,15 @@ test('switches the interface and localized content to English', async ({ page })
 
 test('switches post creation and comment controls to English', async ({ page }) => {
   await page.goto('/boards/1/posts/new')
-  await page.locator('button[aria-label="언어 전환"]:visible').click()
+  await (await openMobileMoreIfNeeded(page, '언어 전환')).click()
   await expect(page.getByRole('heading', { name: 'New post' })).toBeVisible()
   await expect(page.getByLabel('Title')).toBeVisible()
   await expect(page.getByLabel('Content')).toBeVisible()
   await expect(page.getByText('프론트엔드에는 저장되지 않습니다')).toHaveCount(0)
 
   await page.goto('/boards/1/posts/1')
+  await expect(page.getByRole('heading', { name: 'Haeundae Local Tips' })).toBeVisible()
+  await expect(page.getByText('Evening is the best time for a walk.')).toBeVisible()
   await expect(page.getByRole('button', { name: /Edit/ })).toBeVisible()
   await expect(page.getByRole('button', { name: /Delete/ }).first()).toBeVisible()
   await expect(page.getByText('Views 12')).toBeVisible()
@@ -126,7 +134,7 @@ test('switches post creation and comment controls to English', async ({ page }) 
 test('shows the empty post list message in English', async ({ page }) => {
   await page.route('**/api/v1/boards/1/posts*', route => route.fulfill({ json: { items: [], total: 0, page: 1, size: 10 } }))
   await page.goto('/boards/1/posts')
-  await page.locator('button[aria-label="언어 전환"]:visible').click()
+  await (await openMobileMoreIfNeeded(page, '언어 전환')).click()
   await expect(page.getByRole('heading', { name: 'No posts yet' })).toBeVisible()
 })
 
@@ -155,7 +163,7 @@ test('updates search placeholder colors with the theme', async ({ page }) => {
   await page.goto('/')
   const input = page.getByPlaceholder('장소, 축제, 게시글 검색')
   const before = await input.evaluate(element => getComputedStyle(element, '::placeholder').color)
-  await page.locator('button[aria-label*="화면 테마"]:visible').click()
+  await (await openMobileMoreIfNeeded(page, '화면 테마 전환')).click()
   const after = await input.evaluate(element => getComputedStyle(element, '::placeholder').color)
   expect(after).not.toBe(before)
 })
